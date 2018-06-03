@@ -4,10 +4,8 @@ max-width/max-height的初始值为何是 none而不是 auto呢？
 我们不妨举个简单的例子解释一下，已知父元素宽
 度 400 像素，子元素设置宽度 800 像素，假如说 max-width 初始值是 auto，那自然使用和 width
 一样的解析渲染规则，此时 max-width 的计算值就应该是父元素的 400 像素，此时，你就会
-发现，子元素的 800 像素直接完蛋了，因为 max-width 会覆盖 width。
-（因为width800，max-width400,这是有问题的。）
-导致我们的 width永远不能设置为比 auto 计算值更大的宽度值了，这显然是不合理的，这就是为什么 max-width
-初始值是 none 的原因。 
+发现，max-width比普通width小了，为了避免这样的情况发生， max-width初始值是 none
+ 
 
 max-width 会覆盖 width，而且这种覆盖不是普通的覆盖，是超级
 覆盖，覆盖到什么程度呢？大家应该都知道 CSS 世界中的!important 的权重相当高，在业界，往
@@ -22,6 +20,9 @@ img { max-width: 256px; }
 
 min-width覆盖 max-width，此规则发生在 min-width和 max-width
 冲突的时候。
+
+max-height/max-width 值比 height/width 计算值大的时候，
+元素的高度/宽度就是 height/width 属性的计算高度
 
 应用：
 任意高度元素的展开收起动画技术 
@@ -62,7 +63,7 @@ slideDown()方法，但是，在移动端，因为 CSS3 动画支持良好，所
 max-height 值比 height 计算值大的时候，元素的高度就是 height 属性的
 计算高度，在本交互中，也就是 height:auto 时候的高度值。于是，一个高度
 不定的任意元素的展开动画效果就实现了。 
- http://demo.cssworld.cn/3/3-2.php 
+
 但是，使用此方法也有一点要注意，即虽然说从适用范围讲，max- height 值越大使用
 场景越多，但是，如果 max-height 值太大，在收起的时候可能会有“效果延迟”的问
 题，比方说，我们展开的元素高度是 100 像素，而 max-height 是 1000 像素，动画时间

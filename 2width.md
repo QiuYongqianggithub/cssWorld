@@ -1,24 +1,21 @@
 
-
+首先定义：
+元素尺寸：包括 padding和 border，也就是元素的 border box 的尺寸。
+元素内部尺寸：表示元素的内部区域尺寸，包括 padding 但不包括 border，也就是元素的 paddingbox 的尺寸。
+元素外部尺寸：不仅包括 padding 和 border，还包括 margin
 
 width 的默认值是 auto。auto少包含了以下 4 种不同的宽度表现。
 width:auto 在不同场景下的宽度表现的简介： 
-（1）width充分利用可用空间。比方说，`<div>`、`<p>`这些元素的宽度默认是 100%
-  （当有padding，border,margin时，要先从父元素中扣除这些值）于父级容器的。
+（1）width：auto充分利用可用空间。比方说，`<div>`、`<p>`这些元素的宽度默认是 100%
+  （当有padding，border,margin时，要先从父元素中扣除这些值）。
 这种充分利用可用空间的行为还有个专有名字，叫作 fill-available。 
-（2）width收缩到正好可以包裹内容。典型代表就是浮动、绝对定位、inline-block 元素或 table 元素，
-英文称为 shrink-to-fit，直译为“收缩到合适”，我一直把这种现象称为“包裹性”。
-CSS3 中的 fit-content 指的就是这种宽度表现。 
-（3）width收缩到最小。这个最容易出现在 table-layout 为 auto 的表格中，想必有经验的
-人一定见过图 3-4 所示的这样一柱擎天的盛况吧！ 
-（4）无法超出容器。除非有明确的 width 相关设置，否则上面 3 种情况尺寸都不会主动
+（2）width:auto(包裹性)收缩到正好可以包裹内容。典型代表就是浮动、绝对定位、inline-block 元素或 table 元素。
+（3）width收缩到最小。这个最容易出现在 table-layout 为 auto 的表格中！ 
+（4）无法超出容器（父元素）。除非有明确的 width 相关设置，否则上面 3 种情况尺寸都不会主动
 超过父级容器宽度的，但是存在一些特殊情况。例如，内容很长的连续的英文和数字，或者内联
-元素被设置了 white-space:nowrap，则表现为“恰似一江春水向东流，流到断崖也不回头”
+元素被设置了 white-space:nowrap。
 
-尺寸分“内部尺寸”和“外部尺寸”。其中“内部尺寸”表示尺寸由内部元素(如子元素)决定；
-还有一类叫作“外部尺寸”，宽度由外部元素（如父元素）决定。
-也就是`<div>`默认宽度 100%显示，是“外部尺寸”，
-其余全部是“内部尺寸”。而这唯一的“外部尺寸”，是“流”的精髓所在。
+上述四种情形：只有第一种的width表示元素外部尺寸（体现出流的精髓），其余都是元素内部尺寸。
 
 
 
@@ -38,54 +35,18 @@ CSS3 中的 fit-content 指的就是这种宽度表现。
 如何快速判断一个元素使用的是否为“内部尺寸”呢？
 很简单，假如这个元素里面没有内容，宽度就是 0，那就是应用的“内部尺寸”。
 
-“自适应性”，指的是元素尺寸由内部元素决定，但永远小于“包含块”容器的尺寸。
+“自适应性”，指的是元素尺寸由内部元素决定，但永远小于“包含块”容器（父元素）的尺寸。
 
 “内部尺寸”有下面 3 种表现形式。 
 （1）包裹并自适应。
 对于一个元素，如果其 display 属性值是 inline-block，那么即使其里面内容
-再多，只要是正常文本，宽度也不会超过容器（父元素）。
-
-请看这个需求：页面某个模块的文字内容是动态的，可能是几个字，也可能是一句话。然
-后，希望文字少的时候居中显示，文字超过一行的时候居左显示。该如何实现？
-
-```
-HTML：
-<div class="box">
-  <p id="conMore" class="content">文字内容</p>
-</div>
-<!-- 按钮 -->
-<p><button id="btnMore">更多文字</button></p>
-
-CSS：
-.box {
-  padding: 10px;
-  background-color: #cd0000;
-  text-align: center;
-}
-.content {
-  display: inline-block;
-  text-align: left;
-}
-
-JavaScript：
-var btn = document.getElementById('btnMore'), 
-  content = document.getElementById('conMore');
-
-if (btn && content) {
-  btn.onclick = function() {
-    content.innerHTML += '-新增文字';
-  };
-}
-```
-
+再多，只要是正常文本，宽度也不会超过容器（父元素），而是会换行。
 除了 inline-block 元素，浮动元素以及绝对定位元素都具有包裹性，
 均有类似的智能宽度行为。
 
 
 （2）首选最小宽度。
-所谓“首选最小宽度”，指的是元素最适合的最小宽度。我们接着上面的例子，在上面例子
-中，外部容器的宽度是 240 像素，假设宽度是 0，请问里面的 inline-block 元素的宽度是多少？ 
-是 0 吗？不是。在 CSS 世界中，图片和文字的权重要远大于布局，因此，CSS 的设计者显
+所谓“首选最小宽度”，指的是元素最适合的最小宽度。CSS 的设计者显
 然是不会让图文在 width:auto 时宽度变成 0 的，此时所表现的宽度就是“首选最小宽度”。
 具体表现规则如下。
 • 东亚文字（如中文）最小宽度为每个汉字的宽度，
@@ -107,13 +68,13 @@ block”这几个字符以连接符“-”作为分隔符，形
 度”实际等同于“包裹性”元素设置 white-space:nowrap 声明后的宽
 度。如果内部没有块级元素或者块级元素没有设定宽度值，则“最大宽度”实际上是最大的连
 续内联盒子的宽度。
-什么是连续内联盒子？这里你就简单地将其理
-解为 display 为 inline、inline-block、inline-table 等元素。“连续内联盒子”指
-的全部都是内联级别的一个或一堆元素，中间没有任何的换行标签`<br>`或其他块级元素。
+“连续内联盒子”指
+的全部都是内联级别（ display 为 inline、inline-block、inline-table ）的一个或一堆元素，
+中间没有任何的换行标签`<br>`或其他块级元素。
 
 
 
-“宽度分离”
+“宽度分离”技巧：
 
 .father { 
  width: 102px; 
@@ -124,7 +85,7 @@ block”这几个字符以连接符“-”作为分隔符，形
 } 
 
 多一个父级元素用来设定元素的总体宽，其余的border,padding,margin等都在元素自身上设置。
-如此可以实现box-sizing:border-box;
+如此可以实现类似box-sizing:border-box;
 
 “内在盒子”
 的 4 个盒子它们分别是 content box、padding box、border box 和 margin box。默认情况下，width
@@ -172,7 +133,6 @@ textarea {
 在浏览器还没支持 box-sizing 的年代，我们的做法有点儿类似于“宽度分离”，外面嵌
 套`<div>`标签，模拟 border 和 padding，`<textarea>`作为子元素，border 和 padding
 全部为 0，然后宽度 100%自适应父级`<div>`。 
-手动输入 http://demo.cssworld.cn/3/2-9.php 。 
 然而，这种模拟也有局限性，比如无法使用:focus 高亮父级的边框，
 因为 CSS 世界中并无父选择器，只能使用更复杂的嵌套加其他 CSS 技巧来
 模拟。
@@ -184,61 +144,3 @@ textarea {
 box-sizing: border-box;
 } 
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

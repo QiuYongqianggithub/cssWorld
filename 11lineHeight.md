@@ -56,7 +56,7 @@ height 高度一样就可以了
  background-color: #f0f3f9; 
 } 
 .content { 
- display: inline-block; 
+ display: inline-block; /*生成一个独立的行框盒子（前面有幽灵空白节点）*/
  line-height: 20px; 
  margin: 0 20px; 
  vertical-align: middle; 
